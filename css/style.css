@@ -1,0 +1,313 @@
+* {
+    box-sizing: border-box;
+}
+
+html,
+body {
+    margin: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    background: #000;
+    font-family: Inter, Arial, sans-serif;
+}
+
+body {
+    color: #fff;
+}
+
+.app {
+    position: relative;
+    width: 100vw;
+    height: 100vh;
+}
+
+/* =========================
+   CAMERA SCREEN / RESULT SCREEN
+========================= */
+.camera-screen,
+.result-screen {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+}
+
+.camera-screen {
+    background: #000;
+}
+
+#camera {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    transform: scaleX(-1);
+}
+
+#overlayCanvas {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    opacity: 0.0;
+}
+
+/* =========================
+   TOP STATUS
+========================= */
+.top-ui {
+    position: absolute;
+    top: 22px;
+    left: 22px;
+    right: 22px;
+    display: flex;
+    justify-content: flex-start;
+    pointer-events: none;
+    z-index: 30;
+}
+
+.status-pill {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 16px;
+    border-radius: 999px;
+    background: rgba(0, 0, 0, 0.36);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.16);
+}
+
+.status-dot {
+    width: 11px;
+    height: 11px;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.28);
+    transition: 0.2s ease;
+}
+
+.status-dot.ready {
+    background: #8fe7ff;
+    box-shadow: 0 0 18px rgba(143, 231, 255, 0.9);
+}
+
+.status-copy {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.status-copy strong {
+    font-size: 14px;
+    line-height: 1.1;
+}
+
+.status-copy span {
+    font-size: 12px;
+    opacity: 0.8;
+}
+
+/* =========================
+   CAMERA CAPTURE BUTTON
+========================= */
+.bottom-ui {
+    position: absolute;
+    left: 50%;
+    bottom: 34px;
+    transform: translateX(-50%);
+    z-index: 30;
+    transition: opacity 0.25s ease, transform 0.25s ease;
+}
+
+/* ซ่อนปุ่ม capture ตอน result โผล่ */
+.app.show-result .bottom-ui {
+    opacity: 0;
+    pointer-events: none;
+    transform: translateX(-50%) translateY(12px);
+}
+
+.capture-btn {
+    appearance: none;
+    border: none;
+    border-radius: 999px;
+    min-width: 170px;
+    padding: 16px 28px;
+    font-size: 16px;
+    font-weight: 800;
+    cursor: pointer;
+    color: #0d1117;
+    background: linear-gradient(135deg, #8fe7ff, #d8f8ff);
+    box-shadow: 0 16px 40px rgba(143, 231, 255, 0.28);
+    transition: transform 0.18s ease, box-shadow 0.18s ease, opacity 0.18s ease;
+}
+
+.capture-btn:hover {
+    transform: translateY(-2px);
+}
+
+.capture-btn:active {
+    transform: translateY(0);
+}
+
+/* =========================
+   RESULT SCREEN
+========================= */
+.result-screen {
+    display: none;
+    background: #000;
+    z-index: 10;
+}
+
+.result-screen.show {
+    display: block;
+}
+
+/* ภาพโปสเตอร์ final */
+#resultImage {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    display: block;
+    background: transparent;
+}
+
+/* =========================
+   RESULT ACTIONS
+   - ขยับไปทางขวาอีก
+   - อยู่ใต้ "you found it!"
+========================= */
+.result-actions {
+    position: absolute;
+    left: 67%;
+    top: 49%;
+    transform: translateX(-50%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 14px;
+    z-index: 40;
+    pointer-events: auto;
+}
+
+/* ปุ่ม */
+.action-btn {
+    appearance: none;
+    border: none;
+    border-radius: 999px;
+    padding: 14px 22px;
+    font-size: 14px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: transform 0.18s ease, opacity 0.18s ease, box-shadow 0.18s ease;
+    white-space: nowrap;
+}
+
+.action-btn:hover {
+    transform: translateY(-2px);
+}
+
+.action-btn:active {
+    transform: translateY(0);
+}
+
+.action-btn.primary {
+    color: #0d1117;
+    background: linear-gradient(135deg, #8fe7ff, #d8f8ff);
+    box-shadow: 0 12px 30px rgba(143, 231, 255, 0.24);
+}
+
+.action-btn.secondary {
+    color: #fff;
+    background: rgba(0, 0, 0, 0.55);
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+}
+
+/* canvas ซ่อน */
+.hidden-canvas {
+    display: none;
+}
+
+/* =========================
+   RESULT FX
+========================= */
+.result-screen.show #resultImage {
+    animation: resultFadeIn 0.45s ease;
+}
+
+@keyframes resultFadeIn {
+    from {
+        opacity: 0;
+        transform: scale(0.985);
+    }
+
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+/* =========================
+   SMALL DESKTOP / TABLET
+========================= */
+@media (max-width: 1280px) {
+    .result-actions {
+        left: 67%;
+        top: 50%;
+        gap: 12px;
+    }
+
+    .action-btn {
+        padding: 13px 20px;
+        font-size: 13px;
+    }
+}
+
+@media (max-width: 1024px) {
+    .result-actions {
+        left: 66%;
+        top: 51%;
+    }
+}
+
+/* =========================
+   MOBILE / TABLET
+========================= */
+@media (max-width: 768px) {
+    .top-ui {
+        top: 14px;
+        left: 14px;
+        right: 14px;
+    }
+
+    .status-pill {
+        padding: 10px 14px;
+    }
+
+    .capture-btn {
+        min-width: 150px;
+        padding: 15px 22px;
+    }
+
+    .result-actions {
+        position: absolute;
+        left: 50%;
+        top: auto;
+        bottom: 20px;
+        transform: translateX(-50%);
+        width: calc(100% - 28px);
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 10px;
+    }
+
+    .action-btn {
+        flex: 1 1 160px;
+        max-width: 220px;
+    }
+}
